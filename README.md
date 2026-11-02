@@ -106,14 +106,3 @@ CUDA_VISIBLE_DEVICES=0 python evaluate.py \
     --checkpoint runs/dehazevar_stage2/checkpoints/step_0030000.pt \
     --output-dir runs/dehazevar_stage2/evaluations
 ```
-
-## Citation
-
-```bibtex
-@article{xu2026dehazevar,
-  title   = {Bootstrapping Visual Autoregressive Modeling for Unsupervised Image Dehazing},
-  author  = {Xu, Tao and Lang, Ping and Lian, Jianhong and Liu, Chang},
-  journal = {IEEE Trans. Image Process.},
-  year    = {2026}
-}
-```

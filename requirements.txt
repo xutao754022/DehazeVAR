@@ -1,0 +1,12 @@
+torch>=2.1.0
+torchvision>=0.16.0
+numpy==1.26.4
+Pillow==10.4.0
+PyYAML==6.0.2
+clean-fid==0.1.35
+huggingface-hub==0.35.3
+lpips==0.1.4
+pyiqa>=0.1.12
+safetensors==0.4.5
+transformers==4.46.3
+tqdm==4.67.1

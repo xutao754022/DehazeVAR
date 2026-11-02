@@ -1,0 +1,82 @@
+data:
+  clean_image_directory: datasets/train/clean
+  train_resize: 286
+  train_crop: 256
+  train_horizontal_flip: true
+  inference_size: 256
+  workers: 4
+
+model:
+  depth: 16
+  patch_nums:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 8
+  - 10
+  - 13
+  - 16
+  vae_checkpoint: weights/var/vae_ch160v4096z32.pth
+  dino_checkpoint: weights/dino-vitb8
+  discriminator_feature_layers:
+  - 4
+  - 8
+  discriminator_reference_branch_count: 3
+  dino_activation_checkpointing: true
+  vae_adapter_initialization_seed: 42017
+  disen_vae_adapter_channels: 32
+
+loss:
+  real_label_smoothing: 1.0
+
+training:
+  seed: 42
+
+disen_vae_pretraining:
+  max_steps: 10000
+  batch_size: 1
+  learning_rate: 0.0001
+  discriminator_learning_rate: 0.0001
+  adam_betas:
+  - 0.9
+  - 0.999
+  adam_epsilon: 1.0e-08
+  weight_decay: 0.0
+  max_grad_norm: 10.0
+  mixed_precision: bf16
+  allow_tf32: true
+  heldout_clean_count: 300
+  minimum_checkpoint_free_gib: 20
+  l1_weight: 1.0
+  ssim_weight: 1.0
+  wavelet_weight: 1.0
+  dino_adversarial_weight: 0.1
+  domain_adversarial_weight: 0.1
+  ssim_window_size: 11
+  ssim_sigma: 1.5
+  wavelet_level_weights:
+  - 1.0
+  - 0.5
+  - 0.25
+  synthetic_haze:
+    homogeneous_probability: 0.35
+    transmission_range:
+    - 0.35
+    - 0.9
+    atmospheric_light_range:
+    - 0.75
+    - 1.0
+    temperature_shift: 0.08
+    noise_standard_deviation:
+    - 0.0
+    - 0.015
+    blur_sigma:
+    - 0.2
+    - 1.5
+    compression_levels:
+    - 48
+    - 192
+    smooth_grid_size: 8

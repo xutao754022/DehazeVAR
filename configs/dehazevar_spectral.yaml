@@ -1,0 +1,225 @@
+data:
+  hazy_image_directory: datasets/train/hazy
+  clean_image_directory: datasets/train/clean
+  additional_clean_image_directory: null
+  additional_clean_image_manifest: null
+  additional_clean_sampling_probability: 0.0
+  train_resize: 286
+  train_crop: 256
+  train_horizontal_flip: true
+  inference_size: 256
+  workers: 4
+
+model:
+  depth: 16
+  patch_nums:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 8
+  - 10
+  - 13
+  - 16
+  vae_checkpoint: weights/var/vae_ch160v4096z32.pth
+  var_checkpoint: weights/var/var_d16.pth
+  dino_checkpoint: weights/dino-vitb8
+  discriminator_type: dino_spectral
+  discriminator_feature_layers:
+  - 4
+  - 8
+  discriminator_reference_branch_count: 3
+  dino_activation_checkpointing: true
+  dino_family_weight: 0.5
+  pretrained_class_count: 1000
+  domain_embedding_initialization: imagenet-mean-plus-noise
+  domain_embedding_noise_scale: 0.01
+  srq_temperature: 2.0
+  srq_gumbel: true
+  blend_alpha: 0.5
+  gradient_checkpointing: true
+  vae_adapter_type: dehazevar
+  vae_adapter_initialization_seed: 42017
+  hfse_base_channels: 32
+  hfse_global_dimension: 128
+  hfse_amplitude_dimension: 64
+  hfse_structure_dimension: 64
+  hfse_dcp_patch_size: 15
+  hfse_dcp_omega: 0.95
+  hfse_light_transmission: 0.8
+  hfse_heavy_transmission: 0.45
+  hfse_synthetic_atmospheric_light: 0.9
+  hfse_ranking_margin: 0.2
+  hfse_edge_weight: 10.0
+  frequency_encoder_channels: 64
+  frequency_phase_encoder_channels: 64
+  cra_reduction_ratio: 4
+  cra_activation: silu
+  hsda_base_channels: 32
+  hsda_domain_dimension: 8
+  hsda_detail_initialization_standard_deviation: 0.02
+  hsda_gamma_maximum: 0.25
+  hsda_dcp_patch_size: 15
+  hsda_dcp_omega: 0.95
+  disen_vae_adapter_channels: 32
+  disen_vae_pretrained_checkpoint: weights/prt/step_0010000.pt
+  spectral_image_size: 256
+  spectral_patch_size: 32
+  spectral_embed_dimension: 96
+  spectral_depths:
+  - 8
+  - 2
+  spectral_heads:
+  - 3
+  - 6
+  spectral_window_size: 4
+  spectral_family_weight: 0.5
+
+loss:
+  gan: 0.5
+  cycle_l1: 1.0
+  cycle_lpips: 10.0
+  identity_l1: 1.0
+  identity_lpips: 1.0
+  real_label_smoothing: 1.0
+  hfse_total_weight: 0.5
+  hfse_classification_weight: 0.1
+  hfse_transmission_weight: 1.0
+  hfse_atmospheric_light_weight: 0.1
+  hfse_ranking_weight: 0.1
+  hfse_invariance_weight: 0.1
+  hfse_smoothness_weight: 0.01
+  auxiliary_cycle_type: freq_loss
+  frequency_low_cutoff: 0.1875
+  frequency_middle_cutoff: 0.375
+  frequency_amplitude_weight: 0.1
+  frequency_phase_weight: 0.05
+  frequency_dcp_patch_size: 15
+  frequency_dcp_omega: 0.95
+  hsda_detail_l1_weight: 1.0
+  hsda_detail_sobel_weight: 0.5
+  hsda_detail_wavelet_weight: 0.5
+  hsda_detail_lpips_weight: 1.0
+  hsda_joint_detail_weight: 0.1
+
+training:
+  seed: 42
+  max_steps: 30000
+  batch_size: 1
+  learning_rate: 2.0e-05
+  discriminator_learning_rate: 2.0e-05
+  optimizer: adam
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_weight_decay: 0.0
+  adam_epsilon: 1.0e-08
+  warmup_steps: 0
+  max_grad_norm: 10.0
+  mixed_precision: bf16
+  allow_tf32: true
+  log_every: 1
+  fixed_sample_count: 4
+  sample_every: 500
+  checkpoint_every: 30000
+  save_initial_checkpoint: false
+  checkpoints_to_keep: 1
+  minimum_checkpoint_free_gib: 20
+  adapter_pretraining_learning_rate: 0.0001
+  adapter_pretraining_steps: 6667
+  adapter_identity_pretraining_steps: 3333
+
+evaluation:
+  every_steps: 30000
+  production_test_sets:
+  - rtts
+  - haze2020
+  - urhi
+  - o-haze
+  - i-haze
+  - nh-haze
+  - sots-indoor
+  - sots-outdoor
+  fid_reference_directory: datasets/train/clean
+  metric_device: cuda:0
+  random_seed: 0
+  test_sets:
+    rtts:
+      source_directory: datasets/evaluation/rtts/hazy
+      evaluation_mode: no-reference
+      metrics:
+      - fid
+      - niqe
+      - musiq
+      - maniqa
+    haze2020:
+      source_directory: datasets/evaluation/haze2020/hazy
+      evaluation_mode: no-reference
+      metrics:
+      - fid
+      - niqe
+      - musiq
+      - maniqa
+    urhi:
+      source_directory: datasets/evaluation/urhi/hazy
+      evaluation_mode: no-reference
+      metrics:
+      - fid
+      - niqe
+      - musiq
+      - maniqa
+    o-haze:
+      source_directory: datasets/evaluation/o-haze/hazy
+      ground_truth_directory: datasets/evaluation/o-haze/gt
+      evaluation_mode: full-reference
+      metrics:
+      - psnr
+      - ssim
+      - lpips
+      - vsi
+      pairing_rule: normalized-stem
+    i-haze:
+      source_directory: datasets/evaluation/i-haze/hazy
+      ground_truth_directory: datasets/evaluation/i-haze/gt
+      evaluation_mode: full-reference
+      metrics:
+      - psnr
+      - ssim
+      - lpips
+      - vsi
+      pairing_rule: normalized-stem
+    nh-haze:
+      source_directory: datasets/evaluation/nh-haze/hazy
+      ground_truth_directory: datasets/evaluation/nh-haze/gt
+      evaluation_mode: full-reference
+      metrics:
+      - psnr
+      - ssim
+      - lpips
+      - vsi
+      pairing_rule: normalized-stem
+    sots-indoor:
+      source_directory: datasets/evaluation/sots-indoor/hazy
+      ground_truth_directory: datasets/evaluation/sots-indoor/gt
+      evaluation_mode: full-reference
+      metrics:
+      - psnr
+      - ssim
+      - lpips
+      - vsi
+      pairing_rule: reside-sots
+    sots-outdoor:
+      source_directory: datasets/evaluation/sots-outdoor/hazy
+      ground_truth_directory: datasets/evaluation/sots-outdoor/gt
+      evaluation_mode: full-reference
+      metrics:
+      - psnr
+      - ssim
+      - lpips
+      - vsi
+      pairing_rule: reside-sots
+    fattal:
+      source_directory: datasets/evaluation/fattal/hazy
+      evaluation_mode: qualitative-only
+      metrics: []

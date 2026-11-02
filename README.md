@@ -19,6 +19,8 @@ pip install -r requirements.txt
 
 ## Pre-trained Weights & Datasets
 
+Download the `v3_latent_refiner` weights (HFSE, 30k steps) from [Google Drive](https://drive.google.com/drive/folders/1VqMT8WmQGE97ZKaddRRRVfpDByLrRgDI).
+
 ### 1. Pre-trained Backbones
 
 Download the official `VAR` checkpoints and `DINO` backbone into `weights/` (or update the corresponding paths in `configs/dehazevar.yaml`):

@@ -19,7 +19,7 @@ pip install -r requirements.txt
 
 ## Pre-trained Weights & Datasets
 
-Download the `v3_latent_refiner` weights (HFSE, 30k steps) from [Google Drive](https://drive.google.com/drive/folders/1VqMT8WmQGE97ZKaddRRRVfpDByLrRgDI).
+Download the pre-trained model weights from [Google Drive](https://drive.google.com/drive/folders/1VqMT8WmQGE97ZKaddRRRVfpDByLrRgDI).
 
 ### 1. Pre-trained Backbones
 

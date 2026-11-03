@@ -3,7 +3,7 @@
 Official PyTorch implementation of **DehazeVAR: Bootstrapping Visual Autoregressive Modeling for Unsupervised Image Dehazing** (Tao Xu, Ping Lang, Jianhong Lian, and Chang Liu).
 
 DehazeVAR adapts pre-trained Visual Autoregressive (`VAR-d16`) models for unpaired image dehazing via two components:
-- **Parallax-Resilient Tokenizer (PRT)**: Combines Dark Channel Prior (DCP) physical encoding, shared-index Softmax Relaxed Quantization (SRQ) codebook calibration, and disentangled clean/haze decoder branches pre-trained with online atmospheric scattering synthesis.
+- **Physically-Grounded Residual Tokenizer (PRT)**: Combines Dark Channel Prior (DCP) physical encoding, shared-index Softmax Relaxed Quantization (SRQ) codebook calibration, and disentangled clean/haze decoder branches pre-trained with online atmospheric scattering synthesis.
 - **Conditional Residual Adapter (CRA) & Multi-Domain Objectives**: Injects domain-conditioned bottleneck residual adapters across decoder stages and optimizes bidirectional cycle consistency ($\ell_1 + \text{LPIPS}$), 2D Fourier amplitude/phase alignment, and frozen DINO ViT-B/8 spatial/spectral discrimination.
 
 ## Installation
@@ -66,7 +66,7 @@ After Stage 1 finishes, copy or link `runs/prt_stage1/checkpoints/step_0010000.p
 
 ### Stage 2: Unpaired Dehazing Training
 
-Train the full DehazeVAR model for 30,000 steps (including adapter warm-up prior to joint optimization):
+Train the full DehazeVAR model for 30,000 steps:
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 python train_dehazevar.py \
@@ -86,8 +86,6 @@ CUDA_VISIBLE_DEVICES=0 python train_dehazevar.py \
 
 ## Inference & Evaluation
 
-### Directory Inference
-
 Render dehazed predictions for a folder of hazy images:
 
 ```bash
@@ -97,8 +95,6 @@ CUDA_VISIBLE_DEVICES=0 python inference.py \
     --input-dir /path/to/hazy_images \
     --output-dir outputs/dehazed_results
 ```
-
-### Benchmark Evaluation
 
 Evaluate a trained checkpoint on the configured benchmarks (or specify a subset via `--dataset-names`):
 

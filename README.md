@@ -1,4 +1,4 @@
-# DehazeVAR: Bootstrapping Visual Autoregressive Modeling for Unsupervised Image Dehazing
+# Bootstrapping Visual Autoregressive Modeling for Unsupervised Image Dehazing
 
 Official PyTorch implementation of **DehazeVAR: Bootstrapping Visual Autoregressive Modeling for Unsupervised Image Dehazing** (Tao Xu, Ping Lang, Jianhong Lian, and Chang Liu).
 
